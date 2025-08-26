@@ -1,4 +1,5 @@
-export default async function handler(req, res) {
+<script>
+  export default async function handler(req, res) {
   // Add CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -23,4 +24,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
-
+</script>
