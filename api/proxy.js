@@ -1,4 +1,3 @@
-<script>
 export default async function handler(req, res) {
   // Add CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -25,4 +24,3 @@ export default async function handler(req, res) {
   }
 }
 
-</script>>
