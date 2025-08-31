@@ -11,7 +11,7 @@
 
   try {
     // Forward to Google Apps Script endpoint
-    const response = await fetch("https://script.google.com/macros/s/AKfycbx4w3_TXVOoBgBAPxt7qDLXEkoxyD6uTNXOV3MmeBqC7Z2ntLjbKiiaeW1Lg-IjTo3_-g/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbw5QhdY0nQCl2aMIUqA-Fk6rCxIRakhX9_drUBBbxAw4nY6ytaja1ZiF7pHJG_1z2ctZQ/exec", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(req.body),
