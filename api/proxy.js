@@ -1,33 +1,33 @@
 export default async function handler(req, res) {
-  // Allow Shopify App Proxy requests
+  // Add CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Shopify-Storefront-Access-Token, X-Shopify-Api-Features, X-Shopify-Hmac-Sha256");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // Handle preflight OPTIONS request
+  // Handle preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-  try {
-    // Parse incoming body (Shopify app proxy sometimes sends query params)
-    const body = req.body && Object.keys(req.body).length > 0
-      ? req.body
-      : req.query; // fallback for GET requests
+  const { api_key } = req.body || {};
 
-    // Forward request to Google Apps Script
+  // ✅ Validate API key before forwarding
+  if (api_key !== "]|]umF,7/P37YNGqA@") {
+    return res.status(401).json({ error: "Unauthorized - invalid API key" });
+  }
+
+  try {
+    // Forward to GAS
     const response = await fetch(
-      "https://script.google.com/macros/s/AKfycbxQB9bkb6FGkmP_e6lkMlU0R9fNTJMIOCV3Jd9A4YJhmMqbJzjQvq66IPkLq2OGeCh1Pg/exec",
+      "https://script.google.com/macros/s/AKfycbyrD7WGb3ecmqaCBm9wi_55E5qWLDsr7j0g30WeZrG0ykQYE3eAhuESzybthhmdgnm6cA/exec",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(req.body),
       }
     );
 
     const text = await response.text();
-
-    // Pass status + response back to Shopify
     res.status(response.status).send(text);
   } catch (error) {
     res.status(500).json({ error: error.message });
