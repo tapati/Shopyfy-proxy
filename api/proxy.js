@@ -10,18 +10,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    const body = req.body;
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
 
     // ✅ API key check
     if (!body.api_key || body.api_key !== API_KEY) {
       return res.status(401).json({ error: "Unauthorized: Invalid API key" });
     }
 
+    // Forward to GAS (strip API key if you don’t want to pass it)
+    const forwardBody = { ...body };
+    delete forwardBody.api_key;
+
     // Forward request to GAS
     const response = await fetch("https://script.google.com/macros/s/AKfycbyrD7WGb3ecmqaCBm9wi_55E5qWLDsr7j0g30WeZrG0ykQYE3eAhuESzybthhmdgnm6cA/exec", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify(forwardBody),
     });
 
     const text = await response.text();
