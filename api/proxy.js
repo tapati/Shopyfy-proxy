@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     delete forwardBody.api_key;
 
     // Forward request to GAS
-    const response = await fetch("https://script.google.com/macros/s/AKfycbyrD7WGb3ecmqaCBm9wi_55E5qWLDsr7j0g30WeZrG0ykQYE3eAhuESzybthhmdgnm6cA/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxQB9bkb6FGkmP_e6lkMlU0R9fNTJMIOCV3Jd9A4YJhmMqbJzjQvq66IPkLq2OGeCh1Pg/exec", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(forwardBody),
