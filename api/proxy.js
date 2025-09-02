@@ -11,6 +11,7 @@ export default async function handler(req, res) {
 
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    console.log("Incoming body:", body);  // 👈 logs the request body in Vercel logs
 
     // ✅ API key check
     if (!body.api_key || body.api_key !== API_KEY) {
