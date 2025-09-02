@@ -1,4 +1,4 @@
-const API_KEY = "umF,7/P37YNGqA@";
+//const API_KEY = "umF,7/P37YNGqA@";
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -14,9 +14,9 @@ export default async function handler(req, res) {
     console.log("Incoming body:", body);  // 👈 logs the request body in Vercel logs
 
     // ✅ API key check
-    if (!body.api_key || body.api_key !== API_KEY) {
+  /*  if (!body.api_key || body.api_key !== API_KEY) {
       return res.status(401).json({ error: "Unauthorized: Invalid API key" });
-    }
+    } */
 
     // Forward to GAS (strip API key if you don’t want to pass it)
     const forwardBody = { ...body };
