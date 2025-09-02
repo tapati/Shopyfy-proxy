@@ -1,4 +1,4 @@
-const API_KEY = "]|]umF,7/P37YNGqA@";
+const API_KEY = "umF,7/P37YNGqA@";
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
