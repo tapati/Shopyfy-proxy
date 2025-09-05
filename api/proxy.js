@@ -1,11 +1,13 @@
 //const API_KEY = "umF,7/P37YNGqA@";
 
+import formidable from "formidable";
+import fs from "fs";
+
 export const config = {
   api: {
-    bodyParser: { sizeLimit: '25mb' }
+    bodyParser: false, // ❌ disable bodyParser for multipart
   },
-  runtime: "nodejs"
-}
+};
 
 
 export default async function handler(req, res) {
