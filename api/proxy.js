@@ -1,55 +1,41 @@
-import Busboy from "busboy";
-
-export const config = {
-  api: {
-    bodyParser: false, // disable Next.js default parser
-  },
-};
+//const API_KEY = "umF,7/P37YNGqA@";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
 
-  const busboy = Busboy({ headers: req.headers });
+  try {
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    console.log("Incoming body:", body);  // 👈 logs the request body in Vercel logs
 
-  let formData = {}; // collect everything
+    // ✅ API key check
+  /*  if (!body.api_key || body.api_key !== API_KEY) {
+      return res.status(401).json({ error: "Unauthorized: Invalid API key" });
+    } */
 
-  busboy.on("field", (name, val) => {
-    formData[name] = val;
-  });
+    // Forward to GAS (strip API key if you don’t want to pass it)
+   const forwardBody = { ...body };
+   // delete forwardBody.api_key;
 
-  busboy.on("file", (name, file, info) => {
-    const chunks = [];
-    file.on("data", (chunk) => chunks.push(chunk));
-    file.on("end", () => {
-      const buffer = Buffer.concat(chunks);
-      formData[name] = buffer.toString("base64"); // convert to base64
-      formData[name + "_type"] = info.mimeType;   // keep file type
+    console.log("Forwarding body to GAS:", forwardBody);
+    
+    // Forward request to GAS
+    const response = await fetch("https://script.google.com/macros/s/AKfycbyJ_KjANEK882iR6tthWicDgqcbpI2molcBSk6-AyuNtbSJd9ahrYh3tXUEiaXCSyd0fQ/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(forwardBody),
     });
-  });
 
-  busboy.on("finish", async () => {
-    try {
-      console.log("✅ Parsed formData:", Object.keys(formData));
+   console.log("GAS status:", response.status); 
 
-      // Forward the request to GAS (or IDfy later)
-      const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbyJ_KjANEK882iR6tthWicDgqcbpI2molcBSk6-AyuNtbSJd9ahrYh3tXUEiaXCSyd0fQ/exec",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const result = await response.json();
-      res.status(200).json(result);
-    } catch (err) {
-      console.error("❌ Forwarding error:", err);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
-
-  req.pipe(busboy);
+    const text = await response.text();
+    res.status(response.status).send(text);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
