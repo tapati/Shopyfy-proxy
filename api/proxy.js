@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     console.log("Forwarding body to GAS:", forwardBody);
     
     // Forward request to GAS
-    const response = await fetch("https://script.google.com/macros/s/AKfycbxKdRsuoPibwsPV8v4lxVylw-dUo4zgospchfat6DWVpiNKEhHE2rnuqnPVg6hB8SDXBQ/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbwdTYomKK-K632kurq5tII1YpGiQlfmLirIT9vjSzPl2O5SbCz_Ibor18iEAFeVBxM99g/exec", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(forwardBody),
